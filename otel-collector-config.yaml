@@ -1,0 +1,47 @@
+receivers:
+  opencensus:
+
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    namespace: promexample
+    const_labels:
+      label1: value1
+  logging:
+
+  otlp:
+    endpoint: "ingest.lightstep.com:443"
+    headers:
+      "lightstep-access-token": "EX7UHtUiiEkMHkglbMb7xs0Orl8MUghSDXqb5wrjsR7diS+KJ5AvCdsg8/o35MSUTEEHKBD2stlHYKRVj9WKaYixf2iDT+KXk63qsPCW"
+
+  jaeger:
+    endpoint: jaeger-all-in-one:14250
+    insecure: true
+
+# Alternatively, use jaeger_thrift_http with the settings below. In this case
+# update the list of exporters on the traces pipeline.
+#
+#  jaeger_thrift_http:
+#    url: http://jaeger-all-in-one:14268/api/traces
+
+processors:
+  batch:
+
+extensions:
+  health_check:
+  pprof:
+    endpoint: :1888
+  zpages:
+    endpoint: :55679
+
+service:
+  extensions: [pprof, zpages, health_check]
+  pipelines:
+    traces:
+      receivers: [opencensus]
+      processors: [batch,]
+      exporters: [logging, jaeger, otlp]
+    metrics:
+      receivers: [opencensus]
+      processors: [batch]
+      exporters: [logging,prometheus]
