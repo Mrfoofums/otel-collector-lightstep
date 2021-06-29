@@ -1,5 +1,7 @@
 # OpenTelemetry Collector Demo
 
+*This fork has an added exporter to send data to lighstep in the ```otel-collector-config.yaml```
+
 *IMPORTANT:* This is a pre-released version of the OpenTelemetry Collector.
 
 This demo presents the typical flow of observability data with multiple
